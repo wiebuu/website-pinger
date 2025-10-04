@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Website Auto Pinger</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      background-color: #0d1117;
+      color: #00ff88;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* Left: Website Viewer */
+    .viewer {
+      flex: 2;
+      border-right: 2px solid #1f6feb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #161b22;
+    }
+
+    iframe {
+      width: 95%;
+      height: 95%;
+      border: 2px solid #30363d;
+      border-radius: 10px;
+      background: white;
+    }
+
+    /* Right: Terminal */
+    .terminal {
+      flex: 1;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      background-color: #000;
+      overflow-y: auto;
+      border-left: 2px solid #1f6feb;
+    }
+
+    .log {
+      white-space: pre-wrap;
+      margin-bottom: 5px;
+      color: #00ff88;
+      font-size: 14px;
+    }
+
+    .blink {
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="viewer">
+    <iframe id="siteFrame" src=""></iframe>
+  </div>
+  <div class="terminal" id="terminal">
+    <div class="log">Initializing auto-pinger...</div>
+  </div>
+
+  <script>
+    const sites = [
+      { url: "https://wiecodes.com", name: "wiecodes" },
+      { url: "https://srhuclub.vercel.app", name: "srhulub" }
+    ];
+
+    const terminal = document.getElementById("terminal");
+    const iframe = document.getElementById("siteFrame");
+
+    function log(message) {
+      const entry = document.createElement("div");
+      entry.classList.add("log");
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      terminal.appendChild(entry);
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    let index = 0;
+
+    async function startLoop() {
+      while (true) {
+        const site = sites[index];
+        log(`🌐 Visiting ${site.name} (${site.url})...`);
+        iframe.src = site.url;
+
+        // Stay on each site for 1 minute
+        await new Promise(res => setTimeout(res, 60 * 1000));
+
+        log(`✅ Finished visiting ${site.name}. Moving to next site...`);
+        index = (index + 1) % sites.length;
+      }
+    }
+
+    startLoop();
+  </script>
+</body>
+</html>
