@@ -1,0 +1,9 @@
+{
+    "builds": [
+      { "src": "pinger.html", "use": "@vercel/static" }
+    ],
+    "routes": [
+      { "src": "/(.*)", "dest": "pinger.html" }
+    ]
+  }
+  
